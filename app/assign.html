@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignación Masiva de Leads - ONE CLUB GROUP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/crm_styles.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+    <style>
+        .lead-checkbox:checked + .lead-card {
+            border: 2px solid #0366d6;
+            background-color: rgba(3, 102, 214, 0.05);
+        }
+        
+        .select-all-checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .lead-card {
+            transition: all 0.3s ease;
+        }
+
+        .lead-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="crm_dashboard.html" class="flex items-center text-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver al CRM
+                    </a>
+                </div>
+                <h1 class="text-xl font-semibold">Asignación de Leads</h1>
+                <div></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Stats Section -->
+        <div class="stats-section bg-white p-4 rounded-lg shadow mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="stat-card p-4 bg-blue-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Leads Sin Asignar</div>
+                    <div id="unassignedCount" class="text-2xl font-bold text-blue-600">0</div>
+                </div>
+                <div class="stat-card p-4 bg-green-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Leads Asignados</div>
+                    <div id="assignedCount" class="text-2xl font-bold text-green-600">0</div>
+                </div>
+                <div class="stat-card p-4 bg-purple-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Total de Leads</div>
+                    <div id="totalLeadsCount" class="text-2xl font-bold text-purple-600">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Filtrar por etapa</label>
+                    <select id="filterStage" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Todas las etapas</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Asignar a usuario</label>
+                    <select id="assignUser" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Seleccionar usuario</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Estado de asignación</label>
+                    <select id="filterAssignment" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Todos los leads</option>
+                        <option value="unassigned">Sin asignar</option>
+                        <option value="assigned">Asignados</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Buscar</label>
+                    <input type="text" id="searchInput" placeholder="Nombre, email o teléfono..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sort and Actions -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-gray-700">Ordenar por:</span>
+                    <select id="sortLeads" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="date_desc">Fecha (Más reciente)</option>
+                        <option value="date_asc">Fecha (Más antiguo)</option>
+                        <option value="name_asc">Nombre (A-Z)</option>
+                        <option value="name_desc">Nombre (Z-A)</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="selectAll" class="select-all-checkbox">
+                        <label for="selectAll" class="ml-2">Seleccionar todos</label>
+                    </div>
+                    <button id="selectUnassigned" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Seleccionar No Asignados
+                    </button>
+                    <button id="clearSelection" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                        <i class="fas fa-times mr-2"></i>
+                        Limpiar Selección
+                    </button>
+                     <button id="assignButton" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition" disabled>
+                    <i class="fas fa-user-check mr-2"></i>
+                    Asignar Leads Seleccionados
+                </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Leads Grid -->
+        <div id="leadsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Los leads se cargarán aquí dinámicamente -->
+        </div>
+
+        <!-- Distribution Table -->
+<div><br></div></div>
+
+
+
+
+
+# En assign.html, actualizar la tabla:
+
+<div class="bg-white p-4 rounded-lg shadow mt-6">
+    <h3 class="text-lg font-semibold mb-4">Distribución por Usuario</h3>
+    
+    <!-- Gráficos de resumen -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Gráfico de distribución de leads -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-700 mb-4">Distribución de Leads</h4>
+            <canvas id="leadsDistributionChart"></canvas>
+        </div>
+        
+        <!-- Gráfico de efectividad de conversión -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-700 mb-4">Tasa de Conversión</h4>
+            <canvas id="conversionRateChart"></canvas>
+        </div>
+        <!-- Gráfico de tiempo de respuesta -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="text-sm font-medium text-gray-700 mb-4">Tiempo Promedio de Respuesta</h4>
+            <canvas id="responseTimeChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table id="assignmentDistribution" class="min-w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leads Asignados</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Por Contactar</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ventas Totales</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ventas Este Mes</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasa Conversión</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiempo Respuesta</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Se llenará dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+    </main>
+
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold mb-4">Confirmar Asignación Masiva</h3>
+            <p class="text-gray-600 mb-4">
+                ¿Estás seguro de que deseas asignar <span id="selectedLeadsCount" class="font-bold">0</span> leads al usuario seleccionado?
+            </p>
+            <div class="flex justify-end gap-4">
+                <button id="cancelAssignment" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                    Cancelar
+                </button>
+                <button id="confirmAssignment" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Template -->
+    <div id="notification" class="hidden fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-md">
+        <div class="flex items-center">
+            <div id="notificationIcon" class="flex-shrink-0 w-6 h-6 mr-3"></div>
+            <div>
+                <p id="notificationMessage" class="text-sm font-medium"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/assign.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

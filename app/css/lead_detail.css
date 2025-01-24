@@ -1,0 +1,354 @@
+:root {
+    --primary-color: #0366d6;
+    --secondary-color: #2c3e50;
+    --background-color: #f6f8fa;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --border-color: #e1e4e8;
+    --hover-color: #f1f8ff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--card-background);
+    box-shadow: 0 1px 3px var(--shadow-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    .back-button {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: var(--hover-color);
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Main Content */
+main {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.lead-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+}
+
+/* Card Styles */
+.detail-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+    padding: 1.5rem;
+}
+
+.main-info {
+    grid-column: span 12;
+}
+
+.notes {
+    grid-column: span 6;
+}
+
+.history {
+    grid-column: span 6;
+}
+
+.communications {
+    grid-column: span 6;
+}
+
+.files {
+    grid-column: span 6;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item label {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.info-item span {
+    font-size: 1rem;
+}
+
+/* Timeline Styles */
+.timeline {
+    position: relative;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding: 1rem 0 1rem 2rem;
+    border-left: 2px solid var(--border-color);
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}
+
+.timeline-date {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content {
+    background-color: var(--hover-color);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+/* Communications Styles */
+.communications-list {
+    margin-top: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.communication-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.communication-type {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--hover-color);
+    border-radius: 50%;
+}
+
+.communication-content {
+    flex: 1;
+}
+
+.communication-date {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+/* Files Styles */
+.files-list {
+    margin-top: 1rem;
+    display: grid;
+    gap: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--hover-color);
+    border-radius: 4px;
+}
+
+.file-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    flex: 1;
+}
+
+.file-item small {
+    color: #666;
+}
+
+/* Button Styles */
+.primary-button, .secondary-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.primary-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.secondary-button {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}
+
+.primary-button:hover {
+    background-color: #0056b3;
+}
+
+.secondary-button:hover {
+    background-color: #e1e4e8;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .lead-detail-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .main-info {
+        grid-column: span 6;
+    }
+
+    .notes, .history, .communications, .files {
+        grid-column: span 6;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #1a1a1a;
+        --card-background: #2d2d2d;
+        --text-color: #ffffff;
+        --border-color: #404040;
+        --hover-color: #363636;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+}

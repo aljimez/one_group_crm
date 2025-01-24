@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE CLUB GROUP 🚀</title>
+    <link rel="stylesheet" href="css/crm_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <link rel="icon" href="one.png" type="image/png">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+</head>
+<body>
+    <header>
+        <div class="header-content">
+<a href="index.html" class="logo">
+  <img src="image.png" alt="ONE CLUB GROUP" width="200" >
+</a>
+
+            <nav>
+                <button id="addLeadBtn">Añadir Lead</button>
+                <a href="herramientas.html" class="back-button">Herramientas </a>
+                <button id="logoutBtn">Cerrar Sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <section id="statsSection" class="section">
+    <div class="stat-card">
+        <h3>Leads en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+        <p id="leadsThisMonth">0</p>
+    </div>
+    <div class="stat-card">
+        <h3>Contactados en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+        <p id="contactedThisMonth">0</p>
+    </div>
+    <div class="stat-card">
+        <h3>Captados en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+        <p id="capturedThisMonth">0</p>
+    </div>
+</section>
+
+<section id="filterSection" class="section">
+    <input type="text" id="searchInput" placeholder="Buscar leads...">
+    <select id="filterStage">
+        <option value="">Todas las etapas</option>
+    </select>
+    <select id="filterSource">
+        <option value="">Todas las fuentes</option>
+    </select>
+</section>
+
+        <section id="crmContainer" class="section">
+            <!-- Las columnas de etapas y leads se generarán dinámicamente aquí -->
+        </section>
+
+        <section id="chartsSection" class="section">
+            <div class="chart-container">
+                <canvas id="leadsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="callsChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="addLeadModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Editar Lead</h2>
+        <form id="addLeadForm">
+            <div class="form-group">
+                <label for="leadName">Nombre:</label>
+                <input type="text" id="leadName" name="leadName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="leadEmail">Email:</label>
+                <input type="email" id="leadEmail" name="leadEmail">
+            </div>
+            
+            <div class="form-group">
+                <label for="leadPhone">Teléfono:</label>
+                <input type="tel" id="leadPhone" name="leadPhone">
+            </div>
+
+            <div class="form-group">
+                <label for="leadSource">Fuente:</label>
+                <input type="text" id="leadSource" name="leadSource">
+            </div>
+            
+            
+            
+            <div class="form-group">
+                <label for="leadStage">Etapa:</label>
+                <select id="leadStage" name="leadStage" required>
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="leadNotes">Notas:</label>
+                <textarea id="leadNotes" name="leadNotes"></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="submit-btn">Guardar Lead</button>
+                <a href="#" id="viewDetailsLink" class="view-details-btn" style="display: none;">
+                    Ver detalles completos
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <div id="loader" style="display:none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="js/crm_scripts.js"></script>
+    <button id="darkModeToggle">🌓</button>
+    <a href="assign.html" id="assignPageButton" class="assign-page-button" style="display: none;">
+        <i class="fas fa-users"></i>
+        Asignar Leads
+    </a>
+</body>
+</html>

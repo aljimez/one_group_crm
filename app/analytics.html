@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - ONE CLUB GROUP</title>
+    <link rel="stylesheet" href="css/crm_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="one.png" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="image.png" alt="ONE CLUB GROUP" width="200">
+            </a>
+            <nav>
+                <a href="crm_dashboard.html" class="back-button">Volver al CRM</a>
+                <a href="herramientas.html" class="back-button">Herramientas</a>
+                <button id="logoutBtn">Cerrar Sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <!-- Stats Grid -->
+        <section id="statsSection" class="section">
+            <div class="stat-card">
+                <h3>Leads en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+                <p id="leadsThisMonth">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Contactados en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+                <p id="contactedThisMonth">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Captados en <script>document.write(new Date().toLocaleString('es-ES', { month: 'long' }))</script></h3>
+                <p id="capturedThisMonth">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Tasa de Conversión</h3>
+                <p id="conversionRate">0%</p>
+            </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <!-- Leads Evolution -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Evolución de Leads</h3>
+                <canvas id="leadsChart"></canvas>
+            </div>
+
+            <!-- Calls/Contacts -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Contactos Realizados</h3>
+                <canvas id="callsChart"></canvas>
+            </div>
+
+            <!-- Conversion Funnel -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Embudo de Conversión</h3>
+                <canvas id="funnelChart"></canvas>
+            </div>
+
+            <!-- Stage Distribution -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Distribución por Etapas</h3>
+                <canvas id="stageChart"></canvas>
+            </div>
+
+            <!-- Source Analysis -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Análisis de Fuentes</h3>
+                <canvas id="sourceChart"></canvas>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Métricas de Rendimiento</h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="loader" style="display:none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="js/analytics.js"></script>
+</body>
+</html>

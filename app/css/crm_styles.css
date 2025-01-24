@@ -1,0 +1,1180 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --background-color: #f6f8fa;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --border-color: #e1e4e8;
+    --hover-color: #f1f8ff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --button-color: #0366d6;
+    --button-hover-color: #0056b3;
+    --success-color: #2ecc71;
+}
+
+.dark-mode {
+    --background-color: #1e1e1e;
+    --card-background: #252526;
+    --text-color: #e1e1e1;
+    --border-color: #333333;
+    --hover-color: #2a2d2e;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--card-background);
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Navigation and Button Styles */
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+button {
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: var(--button-hover-color);
+    transform: translateY(-1px);
+}
+
+/* Main Content Styles */
+main {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Stats Section Styles */
+#statsSection {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: var(--card-background);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    flex: 1;
+    margin: 0 0.5rem;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.stat-card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* Filter Section Styles */
+#filterSection {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background-color: var(--card-background);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+#searchInput, #filterStage {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+/* CRM Container Styles */
+#crmContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+}
+
+.stage-column {
+    flex: 1 1 calc(16.666% - 1rem);
+    min-width: 400px;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.stage-column:hover {
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.stage-column h2 {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--text-color);
+}
+
+.lead-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.lead-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: move;
+    transition: all 0.3s ease;
+}
+
+.lead-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    background-color: var(--hover-color);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.close {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+textarea {
+    height: 100px;
+}
+
+/* Loader Styles */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--card-background);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    z-index: 1002;
+}
+
+.notification.success {
+    background-color: var(--success-color);
+}
+
+.notification.error {
+    background-color: var(--accent-color);
+}
+
+/* Chart Section Styles */
+#chartsSection {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.chart-container {
+    width: 48%;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.chart-container:hover {
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+/* WhatsApp Button Styles */
+.whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    padding: 0.7rem 0.6rem;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+
+}
+
+.whatsapp-btn:hover {
+    background-color: #128C7E;
+}
+
+/* Dark Mode Toggle Button */
+#darkModeToggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#darkModeToggle:hover {
+    background-color: var(--button-hover-color);
+    transform: scale(1.1);
+}
+
+/* Ajustes generales para móvil */
+@media (max-width: 768px) {
+    #crmContainer {
+        display: block;
+        padding: 10px;
+        overflow-x: hidden;
+    }
+
+    .stage-column {
+        width: 100%;
+        min-width: 100%;
+        margin-bottom: 20px;
+        overflow: visible;
+    }
+
+    .lead-list {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .lead-card {
+        margin: 10px 0;
+        padding: 15px;
+    }
+
+    /* Mejorar la visibilidad de los botones en móvil */
+    .lead-card button,
+    .lead-card .whatsapp-btn {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* Ajustar el header para móvil */
+    .header-content {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    nav button {
+        width: 100%;
+        margin: 0;
+    }
+
+    /* Ajustar las estadísticas para móvil */
+    #statsSection {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stat-card {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    /* Ajustar los filtros para móvil */
+    #filterSection {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #searchInput,
+    #filterStage {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    /* Ajustar los gráficos para móvil */
+    #chartsSection {
+        flex-direction: column;
+    }
+
+    .chart-container {
+        width: 100%;
+        margin: 10px 0;
+        overflow-x: auto;
+    }
+
+    /* Mejorar la visibilidad del modal en móvil */
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    /* Ajustar los elementos de formulario para mejor tacto */
+    input, select, textarea {
+        font-size: 16px;
+        padding: 12px;
+        margin: 5px 0;
+    }
+
+    /* Mejorar la visibilidad de las notificaciones */
+    .notification {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .lead-card h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .lead-card p {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .modal-content {
+        padding: 10px;
+    }
+
+    .close {
+        font-size: 24px;
+        padding: 5px;
+    }
+}
+
+/* Mejoras en el rendimiento */
+.lead-list {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.lead-card {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+
+.header-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.back-button:hover {
+    background-color: var(--button-hover-color);
+    transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .back-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Añadir al archivo crm_styles.css */
+
+/* Columna de ReContactar */
+.stage-column[data-stage="ReContactar"] {
+    background-color: #fff8e1;
+    border-left: 4px solid #ffa726;
+}
+
+.stage-column[data-stage="ReContactar"] h2 {
+    color: #f57c00;
+}
+
+/* Tarjetas de ReContactar */
+.lead-card[data-needs-recontact="true"] {
+    position: relative;
+    border-left: 4px solid #ffa726;
+    background-color: #fff8e1;
+}
+
+/* Indicador de urgencia */
+.recontact-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.recontact-indicator.urgent {
+    background-color: #f44336;
+    animation: pulse 1.5s infinite;
+}
+
+.recontact-indicator.soon {
+    background-color: #ffa726;
+}
+
+.recontact-indicator.scheduled {
+    background-color: #4caf50;
+}
+
+/* Información de ReContacto */
+.recontact-info {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: rgba(255, 167, 38, 0.1);
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.recontact-date {
+    color: #f57c00;
+    font-weight: bold;
+}
+
+.recontact-notes {
+    margin-top: 5px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Modal de ReContacto */
+.recontact-modal .modal-content {
+    max-width: 500px;
+}
+
+.recontact-modal .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.recontact-modal button.primary {
+    background-color: #ffa726;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.recontact-modal button.secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Animación de pulso para urgentes */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Continuación de los estilos responsivos */
+@media (max-width: 768px) {
+    .stage-column[data-stage="ReContactar"] {
+        border-left: none;
+        border-top: 4px solid #ffa726;
+        margin-top: 20px;
+    }
+
+    .lead-card[data-needs-recontact="true"] {
+        margin: 10px 0;
+    }
+
+    .recontact-modal .modal-content {
+        width: 95%;
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .recontact-info {
+        padding: 5px;
+    }
+
+    .recontact-indicator {
+        top: 5px;
+        right: 5px;
+    }
+}
+
+/* Estilos para el contador de tiempo */
+.recontact-timer {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #fff3e0;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-left: 8px;
+}
+
+/* Estilos para prioridades */
+.priority-high {
+    border-left-color: #f44336 !important;
+}
+
+.priority-urgent {
+    border-left-color: #d32f2f !important;
+    animation: urgent-pulse 2s infinite;
+}
+
+@keyframes urgent-pulse {
+    0% {
+        border-left-color: #d32f2f;
+    }
+    50% {
+        border-left-color: #ff5252;
+    }
+    100% {
+        border-left-color: #d32f2f;
+    }
+}
+
+/* Estilos para botones de acción */
+.recontact-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.recontact-action-btn {
+    flex: 1;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.recontact-action-btn.complete {
+    background-color: #4caf50;
+    color: white;
+}
+
+.recontact-action-btn.reschedule {
+    background-color: #ffa726;
+    color: white;
+}
+
+.recontact-action-btn.cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Tooltip para información adicional */
+.recontact-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.recontact-tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+/* Estilos para estados de recontacto */
+.recontact-status {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-left: 8px;
+}
+
+.recontact-status.pending {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.recontact-status.completed {
+    background-color: #e8f5e9;
+    color: #4caf50;
+}
+
+.recontact-status.cancelled {
+    background-color: #ffebee;
+    color: #f44336;
+}
+
+/* Estadísticas de recontacto */
+.recontact-stats {
+    background-color: #fff8e1;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.recontact-stats-title {
+    color: #f57c00;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.recontact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.recontact-stat-item {
+    text-align: center;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recontact-stat-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #f57c00;
+}
+
+.recontact-stat-label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+.lead-history {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.lead-history h4 {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.history-timeline {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.history-date {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.history-stage {
+    color: var(--text-color);
+}
+
+.toggle-history-btn {
+    background-color: var(--secondary-color);
+}
+
+.toggle-history-btn:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Mejoras para el modo oscuro */
+.dark-mode .lead-history {
+    border-top-color: var(--border-color);
+}
+
+.dark-mode .history-item {
+    border-bottom-color: var(--border-color);
+}
+`;
+
+/* Estilos para el botón de asignación */
+.assign-lead-btn {
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    margin-right: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.assign-lead-btn:hover {
+    background-color: #5849c4;
+}
+
+/* Estilos para el modal de asignación */
+#assignModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+#assignModal .modal-content {
+    background-color: var(--card-background);
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#assignModal .close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+#assignModal h2 {
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+#assignModal select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+#assignModal .submit-btn {
+    background-color: #6c5ce7;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#assignModal .submit-btn:hover {
+    background-color: #5849c4;
+}
+
+/* Dark mode support */
+.dark-mode #assignModal .modal-content {
+    background-color: var(--card-background);
+}
+
+.dark-mode #assignModal select {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    #assignModal .modal-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+
+    .assign-lead-btn {
+        width: 100%;
+        justify-content: center;
+        margin: 5px 0;
+    }
+}
+
+
+.lead-owner {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+
+/* Añadir al archivo crm_styles.css */
+
+.user-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background-color: var(--card-background);
+    border-radius: 8px;
+}
+
+.user-filter-select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    min-width: 200px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-filter-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.2);
+    outline: none;
+}
+
+/* Estilos para el modo oscuro */
+.dark-mode .user-filter-select {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-filter-container {
+        width: 100%;
+    }
+    
+    .user-filter-select {
+        width: 100%;
+    }
+}
+
+.user-filter-select {
+    width: 100%;
+}
+
+/* Botón de asignación masiva */
+.assign-page-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.assign-page-button:hover {
+    background-color: var(--button-hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.assign-page-button i {
+    font-size: 16px;
+}
+
+/* Dark mode support */
+.dark-mode .assign-page-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Estilo para el botón de ver detalles */
+#viewDetailsLink {
+    background-color: #2ecc71 !important; /* Verde */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    
+}
+
+#viewDetailsLink:hover {
+    background-color: #27ae60 !important; /* Verde más oscuro al hover */
+}
+
+#filterSection {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background-color: var(--card-background);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+#filterSection select,
+#filterSection input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    #filterSection {
+        flex-direction: column;
+    }
+    
+    #filterSection select,
+    #filterSection input {
+        width: 100%;
+    }
+}
+
+// Add this to your existing styles
+.history-panel {
+    background-color: var(--card-background);
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.history-item {
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.history-item:last-child {
+    padding-bottom: 0;
+}
+
+.history-item:before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}

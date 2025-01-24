@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Inversiones Profesional</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+        }
+
+        /* Estilos base */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #f1f5f9;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .project-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .project-card.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .project-form {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #eff6ff;
+        }
+
+        .results-container {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* PDF Styles */
+        .pdf-container {
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .pdf-page {
+            page-break-after: always;
+            padding: 40px;
+            position: relative;
+        }
+
+        .pdf-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pdf-section {
+            margin-bottom: 30px;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .pdf-table th,
+        .pdf-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .pdf-table th {
+            background-color: #f8fafc;
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-select {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            .print-full-width {
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .pdf-page {
+                height: 100vh;
+                page-break-after: always;
+            }
+        }
+
+        .fixed {
+    position: fixed;
+}
+
+.inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.bg-opacity-50 {
+    background-opacity: 0.5;
+}
+
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen custom-scrollbar">
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+       
+
+        <!-- Panel de Control Principal -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <!-- Sección de Proyecto -->
+            <div class="mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-900">Proyectos de Inversión</h2>
+
+                </div>
+
+                <!-- Lista de Proyectos -->
+                <div id="projectList" class="project-select">
+                    <!-- Los proyectos se añadirán dinámicamente -->
+                </div>
+
+                <!-- Formulario de Nuevo Proyecto (oculto por defecto) -->
+                <div id="projectForm" class="project-form hidden">
+                    <h3 class="text-xl font-semibold mb-4">Nuevo Proyecto</h3>
+                    <form id="newProjectForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="input-group">
+                                <label class="input-label">Nombre del Proyecto</label>
+                                <input type="text" name="projectName" class="input-field" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Rentabilidad Anual (%)</label>
+                                <input type="number" name="projectReturn" step="0.01" class="input-field" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Inversión Mínima (€)</label>
+                                <input type="number" name="minInvestment" class="input-field" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Descripción</label>
+                                <input type="text" name="projectDescription" class="input-field" required>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-4 mt-6">
+                            <button type="button" id="cancelProjectBtn" class="btn btn-secondary">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Proyecto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sección de Parámetros de Inversión -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6">Parámetros de Inversión</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="input-group">
+                        <label class="input-label">Cantidad a Invertir (€)</label>
+                        <input type="number" id="investmentAmount" class="input-field" min="1000" step="1000" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Plazo de Inversión (Años)</label>
+                        <input type="number" id="investmentYears" class="input-field" min="1" max="30" value="4" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Frecuencia de Reinversión</label>
+                        <select id="reinvestmentFrequency" class="input-field">
+                            <option value="monthly">Mensual</option>
+                            <option value="quarterly">Trimestral</option>
+                            <option value="semiannual">Semestral</option>
+                            <option value="annual">Anual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-8">
+                    <button id="calculateBtn" class="btn btn-primary w-full md:w-auto">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        Calcular Rentabilidad
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Resultados -->
+        <div id="results" class="results-container hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900">Resultados de la Simulación</h2>
+                <div class="flex gap-4">
+                    <button id="printBtn" class="btn btn-secondary">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                        </svg>
+                        Imprimir
+                    </button>
+                    <button id="exportPdfBtn" class="btn btn-secondary">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Exportar PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estadísticas Principales -->
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500">Inversión Inicial</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-2" id="initialInvestment">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500">Capital Final</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-2" id="finalCapital">-</p>
+                    <span class="text-sm text-green-600" id="totalGrowth">-</span>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500">Retorno Total</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-2" id="totalReturn">-</p>
+                    <span class="text-sm text-green-600" id="returnRate">-</span>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-sm font-medium text-gray-500">Retorno Anual Promedio</h3>
+                    <p class="text-2xl font-bold text-gray-900 mt-2" id="annualReturn">-</p>
+                    <span class="text-sm text-blue-600" id="annualRate">-</span>
+                </div>
+            </div>
+
+            <!-- Gráficos y Análisis -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <!-- Gráfico de Evolución del Capital -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Evolución del Capital</h3>
+                    <div class="h-80">
+                        <canvas id="capitalChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Distribución de Retornos -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribución de Retornos</h3>
+                    <div class="h-80">
+                        <canvas id="returnsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Proyecciones Detalladas -->
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-sm overflow-x-auto">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Proyecciones Detalladas</h3>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Período</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capital Inicial</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Retorno</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capital Final</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rendimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectionsTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Se llenará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Notas y Advertencias -->
+            <div class="mt-8 text-sm text-gray-500">
+                <p class="mb-2">* Las proyecciones mostradas son estimaciones basadas en los parámetros proporcionados.</p>
+                <p class="mb-2">* Los rendimientos pasados no garantizan resultados futuros.</p>
+                <p>* Se recomienda consultar con un asesor financiero antes de tomar decisiones de inversión.</p>
+            </div>
+
+        </div>
+        
+<!-- Modal de Contacto -->
+<div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full m-4">
+        <h3 class="text-xl font-semibold mb-4">Introduce tus datos de contacto</h3>
+        <form id="contactForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="userEmail" required 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                <input type="tel" id="userPhone" required 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" id="cancelContact" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                    Continuar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    </div>
+
+    <script>
+        // Añadir después de la declaración de variables al inicio del script
+
+let pdfTemplate = {
+    header: null,
+    summaryPage: null,
+    detailsPage: null,
+    riskAnalysis: null,
+    charts: null
+};
+
+// Nueva función para generar el PDF mejorado
+async function generateEnhancedPDF() {
+    const element = document.getElementById('results');
+    const investmentAmount = document.getElementById('investmentAmount').value;
+    const years = document.getElementById('investmentYears').value;
+
+    // Crear contenedor principal para el PDF
+    const pdfContainer = document.createElement('div');
+    pdfContainer.className = 'pdf-container';
+
+    // Página 1: Portada y Resumen Ejecutivo
+    const coverPage = document.createElement('div');
+    coverPage.className = 'pdf-page';
+    coverPage.innerHTML = `
+        <div style="padding: 40px; text-align: center;">
+            <h1 style="font-size: 24px; color: #2563eb; margin-bottom: 20px;">Informe de Simulación de Inversión</h1>
+            <div style="margin: 40px 0;">
+                <img src="/api/placeholder/200/100" alt="Logo" style="max-width: 200px;"/>
+            </div>
+            <h2 style="font-size: 20px; margin-bottom: 10px;">${selectedProject.name}</h2>
+            <p style="color: #666;">Generado el ${new Date().toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}</p>
+        </div>
+        <div style="padding: 20px 40px;">
+            <h3 style="font-size: 18px; margin-bottom: 15px;">Resumen Ejecutivo</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 style="font-size: 14px; color: #666;">Parámetros de Inversión</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>Inversión Inicial: ${formatCurrency(investmentAmount)}</li>
+                        <li>Plazo: ${years} años</li>
+                        <li>Rentabilidad Objetivo: ${selectedProject.return}%</li>
+                        <li>Frecuencia: ${document.getElementById('reinvestmentFrequency').value}</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="font-size: 14px; color: #666;">Resultados Proyectados</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>Capital Final: ${document.getElementById('finalCapital').textContent}</li>
+                        <li>Retorno Total: ${document.getElementById('totalReturn').textContent}</li>
+                        <li>Rendimiento Anual: ${document.getElementById('annualRate').textContent}</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    `;
+
+    // Página 2: Análisis Detallado
+    const detailsPage = document.createElement('div');
+    detailsPage.className = 'pdf-page';
+    detailsPage.innerHTML = `
+        <div style="padding: 40px;">
+            <h2 style="font-size: 20px; color: #2563eb; margin-bottom: 20px;">Análisis Detallado</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">Evolución del Capital</h3>
+                <div style="height: 300px; margin-bottom: 20px;">
+                    <canvas id="pdfCapitalChart"></canvas>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">Proyecciones Financieras</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f8fafc;">
+                            <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">Período</th>
+                            <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">Capital</th>
+                            <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">Rendimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdfProjectionsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    // Página 3: Análisis de Riesgo
+    const riskPage = document.createElement('div');
+    riskPage.className = 'pdf-page';
+    riskPage.innerHTML = `
+        <div style="padding: 40px;">
+            <h2 style="font-size: 20px; color: #2563eb; margin-bottom: 20px;">Análisis de Riesgo</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">Escenarios de Rendimiento</h3>
+                <div class="scenarios-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                    ${generateScenarios(investmentAmount, years, selectedProject.return)}
+                </div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">Factores de Riesgo</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Riesgo de Mercado:</span> 
+                        Fluctuaciones en el valor de los activos debido a cambios en el mercado.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Riesgo de Liquidez:</span>
+                        Posibilidad de no poder vender la inversión rápidamente sin pérdidas significativas.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Riesgo Operacional:</span>
+                        Posibles pérdidas por fallos en procesos, sistemas o eventos externos.
+                    </li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px;">Consideraciones Importantes</h3>
+                <p style="font-size: 12px; color: #666; line-height: 1.5;">
+                    Este informe es una simulación basada en proyecciones y estimaciones. Los resultados reales pueden 
+                    variar significativamente. Se recomienda consultar con un asesor financiero profesional antes de 
+                    tomar decisiones de inversión. Los rendimientos pasados no garantizan resultados futuros.
+                </p>
+            </div>
+        </div>
+    `;
+
+    // Añadir páginas al contenedor principal
+    pdfContainer.appendChild(coverPage);
+    pdfContainer.appendChild(detailsPage);
+    pdfContainer.appendChild(riskPage);
+
+    // Estilos para el PDF
+    const pdfStyles = document.createElement('style');
+    pdfStyles.textContent = `
+        .pdf-container {
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+        .pdf-page {
+            page-break-after: always;
+            position: relative;
+        }
+        @media print {
+            .pdf-page {
+                height: 100vh;
+            }
+        }
+    `;
+    pdfContainer.appendChild(pdfStyles);
+
+    // Configuración para html2pdf
+    const opt = {
+        margin: 1,
+        filename: `informe_inversion_${selectedProject.name.toLowerCase().replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            letterRendering: true
+        },
+        jsPDF: { 
+            unit: 'cm', 
+            format: 'a4', 
+            orientation: 'portrait'
+        }
+    };
+
+    try {
+        // Agregar un QR code para volver a la simulación
+        const qrCode = await generateQRCode(window.location.href);
+        const qrContainer = document.createElement('div');
+        qrContainer.style.position = 'absolute';
+        qrContainer.style.bottom = '20px';
+        qrContainer.style.right = '20px';
+        qrContainer.innerHTML = `
+            <div style="text-align: center;">
+                <img src="${qrCode}" alt="QR Code" style="width: 100px; height: 100px;"/>
+                <p style="font-size: 10px; color: #666; margin-top: 5px;">Escanea para volver a la simulación</p>
+            </div>
+        `;
+        coverPage.appendChild(qrContainer);
+
+        // Generar y guardar el PDF
+        await html2pdf().set(opt).from(pdfContainer).save();
+    } catch (error) {
+        console.error('Error al generar PDF:', error);
+        alert('Error al generar el PDF. Por favor, inténtelo de nuevo.');
+    }
+}
+
+// Función auxiliar para generar escenarios
+function generateScenarios(amount, years, baseReturn) {
+    const scenarios = [
+        { name: 'Pesimista', modifier: 0.5, class: 'text-red-600' },
+        { name: 'Esperado', modifier: 1, class: 'text-blue-600' },
+        { name: 'Optimista', modifier: 1.5, class: 'text-green-600' }
+    ];
+
+    return scenarios.map(scenario => {
+        const finalAmount = amount * Math.pow(1 + (baseReturn * scenario.modifier / 100), years);
+        const totalReturn = finalAmount - amount;
+        const annualReturn = (Math.pow(finalAmount / amount, 1/years) - 1) * 100;
+
+        return `
+            <div style="padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                <h4 style="font-size: 14px; margin-bottom: 10px; color: ${
+                    scenario.name === 'Pesimista' ? '#dc2626' :
+                    scenario.name === 'Optimista' ? '#16a34a' : '#2563eb'
+                }">${scenario.name}</h4>
+                <ul style="list-style: none; padding: 0; font-size: 12px;">
+                    <li>Capital Final: ${formatCurrency(finalAmount)}</li>
+                    <li>Retorno Total: ${formatCurrency(totalReturn)}</li>
+                    <li>Retorno Anual: ${annualReturn.toFixed(2)}%</li>
+                </ul>
+            </div>
+        `;
+    }).join('');
+}
+
+// Función para generar QR code
+async function generateQRCode(url) {
+    const response = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`);
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+}
+
+// Actualizar el event listener del botón de exportar PDF
+document.getElementById('exportPdfBtn').addEventListener('click', generateEnhancedPDF);
+
+// Añadir botón para compartir por email
+const shareButton = document.createElement('button');
+shareButton.className = 'btn btn-secondary';
+shareButton.innerHTML = `
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+    </svg>
+    Compartir por Email
+`;
+document.querySelector('.flex.gap-4').appendChild(shareButton);
+
+// Función para compartir por email
+shareButton.addEventListener('click', () => {
+    const subject = `Simulación de Inversión - ${selectedProject.name}`;
+    const body = `
+        Resultados de la simulación de inversión:
+        
+        Proyecto: ${selectedProject.name}
+        Inversión Inicial: ${document.getElementById('initialInvestment').textContent}
+        Capital Final: ${document.getElementById('finalCapital').textContent}
+        Retorno Total: ${document.getElementById('totalReturn').textContent}
+        Rendimiento Anual: ${document.getElementById('annualRate').textContent}
+        
+        Para ver la simulación completa, visite: ${window.location.href}
+    `;
+    
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+        // Datos de ejemplo para proyectos predeterminados
+        const defaultProjects = [
+            {
+                name: "Armani",
+                return: 7.5,
+                minInvestment: 5000,
+                description: "Casas armani en Miami"
+            },
+            {
+                name: "Camping Galiza",
+                return: 13,
+                minInvestment: 500,
+                description: "Complejo residencial de lujo con vistas al mar"
+            },
+            {
+                name: "Pool general",
+                return: 5,
+                minInvestment: 1000,
+                description: "Conjunto de inversiones"
+            }
+        ];
+
+        let projects = [...defaultProjects];
+        let selectedProject = null;
+        let charts = {
+            capital: null,
+            returns: null
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeProjects();
+            setupEventListeners();
+        });
+
+        function initializeProjects() {
+            const projectList = document.getElementById('projectList');
+            projectList.innerHTML = '';
+            
+            projects.forEach(project => {
+                projectList.appendChild(createProjectCard(project));
+            });
+        }
+
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
+                <div class="percentage-badge">
+                    <span class="triangle-up"></span>
+                    ${project.return.toFixed(2)}%
+                </div>
+                <h3 class="font-semibold mt-3">${project.name}</h3>
+                <p class="text-sm text-gray-600 mt-2">${project.description}</p>
+                <p class="text-xs text-gray-500 mt-4">Inversión mínima: ${formatCurrency(project.minInvestment)}</p>
+            `;
+            
+            card.addEventListener('click', () => selectProject(project, card));
+            return card;
+        }
+
+        function selectProject(project, card) {
+            document.querySelectorAll('.project-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedProject = project;
+        }
+
+        function setupEventListeners() {
+            // Botón de añadir proyecto
+            document.getElementById('addProjectBtn').addEventListener('click', () => {
+                document.getElementById('projectForm').classList.remove('hidden');
+            });
+
+            // Formulario de nuevo proyecto
+            document.getElementById('newProjectForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                addNewProject();
+            });
+
+            // Botón de cancelar nuevo proyecto
+            document.getElementById('cancelProjectBtn').addEventListener('click', () => {
+                document.getElementById('projectForm').classList.add('hidden');
+                document.getElementById('newProjectForm').reset();
+            });
+
+            // Botón de calcular
+            document.getElementById('calculateBtn').addEventListener('click', calculateInvestment);
+
+            // Botones de exportación
+            document.getElementById('exportPdfBtn').addEventListener('click', exportToPdf);
+            document.getElementById('printBtn').addEventListener('click', () => window.print());
+        }
+
+        function addNewProject() {
+            const form = document.getElementById('newProjectForm');
+            const newProject = {
+                name: form.projectName.value,
+                return: parseFloat(form.projectReturn.value),
+                minInvestment: parseFloat(form.minInvestment.value),
+                description: form.projectDescription.value
+            };
+
+            projects.push(newProject);
+            initializeProjects();
+            form.reset();
+            document.getElementById('projectForm').classList.add('hidden');
+        }
+
+        function calculateInvestment() {
+    if (!selectedProject) {
+        alert('Por favor, selecciona un proyecto');
+        return;
+    }
+
+    const modal = document.getElementById('contactModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    const contactForm = document.getElementById('contactForm');
+    const cancelButton = document.getElementById('cancelContact');
+
+    contactForm.onsubmit = function(e) {
+        e.preventDefault();
+        const email = document.getElementById('userEmail').value;
+        const phone = document.getElementById('userPhone').value;
+
+        // Guardar datos de contacto
+        const contactData = {
+            email: email,
+            phone: phone,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('userContactData', JSON.stringify(contactData));
+
+        // Cerrar modal
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+
+        // Limpiar formulario
+        contactForm.reset();
+
+        // Realizar cálculos
+        const amount = parseFloat(document.getElementById('investmentAmount').value);
+        const years = parseInt(document.getElementById('investmentYears').value);
+        const frequency = document.getElementById('reinvestmentFrequency').value;
+
+        if (!amount || amount < selectedProject.minInvestment) {
+            alert(`La inversión mínima para este proyecto es ${formatCurrency(selectedProject.minInvestment)}`);
+            return;
+        }
+
+        const results = performCalculations(amount, years, selectedProject.return, frequency);
+        updateResults(results);
+        showResults();
+    };
+
+    cancelButton.onclick = function() {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        contactForm.reset();
+    };
+}
+
+
+// Añadir los nuevos event listeners para el modal
+document.addEventListener('DOMContentLoaded', () => {
+    // ... código existente ...
+
+    // Event listeners para el modal de contacto
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('userEmail').value;
+        const phone = document.getElementById('userPhone').value;
+
+        // Guardar datos de contacto
+        const contactData = {
+            email: email,
+            phone: phone,
+            timestamp: new Date().toISOString()
+        };
+
+        // Aquí podrías enviar los datos a tu servidor si lo deseas
+        localStorage.setItem('userContactData', JSON.stringify(contactData));
+
+        // Cerrar modal
+        document.getElementById('contactModal').classList.add('hidden');
+
+        // Continuar con el cálculo
+        performCalculations();
+    });
+
+    document.getElementById('cancelContact').addEventListener('click', () => {
+        document.getElementById('contactModal').classList.add('hidden');
+    });
+});
+
+// Nueva función para realizar los cálculos
+function performCalculations() {
+    const amount = parseFloat(document.getElementById('investmentAmount').value);
+    const years = parseInt(document.getElementById('investmentYears').value);
+    const frequency = document.getElementById('reinvestmentFrequency').value;
+
+    if (!amount || amount < selectedProject.minInvestment) {
+        alert(`La inversión mínima para este proyecto es ${formatCurrency(selectedProject.minInvestment)}`);
+        return;
+    }
+
+    const results = performCalculations(amount, years, selectedProject.return, frequency);
+    updateResults(results);
+    showResults();
+}
+
+
+        function performCalculations(initialAmount, years, annualReturn, frequency) {
+            const periodsPerYear = getPeriodsPerYear(frequency);
+            const periodicRate = annualReturn / (100 * periodsPerYear);
+            const totalPeriods = years * periodsPerYear;
+            
+            const projections = [];
+            let currentAmount = initialAmount;
+
+            for (let i = 0; i <= totalPeriods; i++) {
+                const period = {
+                    period: i,
+                    initialAmount: currentAmount,
+                    return: i === 0 ? 0 : currentAmount * periodicRate,
+                    finalAmount: i === 0 ? currentAmount : currentAmount * (1 + periodicRate)
+                };
+                period.yield = ((period.finalAmount - period.initialAmount) / period.initialAmount) * 100;
+                
+                projections.push(period);
+                currentAmount = period.finalAmount;
+            }
+
+            const finalAmount = projections[totalPeriods].finalAmount;
+            const totalReturn = finalAmount - initialAmount;
+            const totalYield = (totalReturn / initialAmount) * 100;
+            const annualYield = Math.pow(1 + totalYield/100, 1/years) - 1;
+
+            return {
+                initialAmount,
+                finalAmount,
+                totalReturn,
+                totalYield,
+                annualYield: annualYield * 100,
+                projections
+            };
+        }
+
+        function updateResults(results) {
+            // Actualizar estadísticas principales
+            document.getElementById('initialInvestment').textContent = formatCurrency(results.initialAmount);
+            document.getElementById('finalCapital').textContent = formatCurrency(results.finalAmount);
+            document.getElementById('totalGrowth').textContent = `+${results.totalYield.toFixed(2)}%`;
+            document.getElementById('totalReturn').textContent = formatCurrency(results.totalReturn);
+            document.getElementById('returnRate').textContent = `${results.annualYield.toFixed(2)}% anual`;
+            document.getElementById('annualReturn').textContent = formatCurrency(results.totalReturn / results.projections.length * 12);
+            document.getElementById('annualRate').textContent = `${(results.annualYield).toFixed(2)}%`;
+
+            // Actualizar gráficos
+            updateCharts(results);
+
+            // Actualizar tabla de proyecciones
+            updateProjectionsTable(results.projections);
+        }
+
+        function updateCharts(results) {
+            // Actualizar gráfico de evolución del capital
+            updateCapitalChart(results);
+            
+            // Actualizar gráfico de distribución de retornos
+            updateReturnsChart(results);
+        }
+
+        function updateCapitalChart(results) {
+            const ctx = document.getElementById('capitalChart').getContext('2d');
+            
+            if (charts.capital) {
+                charts.capital.destroy();
+            }
+
+            const labels = results.projections.map((p, i) => `Período ${i}`);
+            const data = results.projections.map(p => p.finalAmount);
+
+            charts.capital = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Capital',
+                        data: data,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => formatCurrency(value)
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateReturnsChart(results) {
+            const ctx = document.getElementById('returnsChart').getContext('2d');
+            
+            if (charts.returns) {
+                charts.returns.destroy();
+            }
+
+            const returns = results.projections.map(p => p.return);
+            const yields = results.projections.map(p => p.yield);
+
+            charts.returns = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: results.projections.map((_, i) => `Período ${i}`),
+                    datasets: [{
+                        label: 'Retorno',
+                        data: returns,
+                        backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => formatCurrency(value)
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateProjectionsTable(projections) {
+            const tbody = document.getElementById('projectionsTable');
+            tbody.innerHTML = '';
+
+            projections.forEach(projection => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(projection.return)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(projection.finalAmount)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${projection.yield.toFixed(2)}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showResults() {
+            const results = document.getElementById('results');
+            results.classList.remove('hidden');
+            setTimeout(() => results.classList.add('show'), 100);
+        }
+
+        async function exportToPdf() {
+            const element = document.getElementById('results');
+            const opt = {
+                margin: 1,
+                filename: `simulacion_inversion_${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Agregar encabezado con fecha y detalles del proyecto
+            const header = document.createElement('div');
+            header.innerHTML = `
+                <div style="padding: 20px; margin-bottom: 20px;">
+                    <h2 style="margin-bottom: 10px;">Simulación de Inversión - ${selectedProject.name}</h2>
+                    <p>Fecha: ${new Date().toLocaleDateString()}</p>
+                    <p>Rentabilidad anual: ${selectedProject.return}%</p>
+                    <p>Inversión inicial: ${formatCurrency(document.getElementById('investmentAmount').value)}</p>
+                </div>
+            `;
+            element.insertBefore(header, element.firstChild);
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (error) {
+                console.error('Error al generar PDF:', error);
+                alert('Error al generar el PDF. Por favor, inténtelo de nuevo.');
+            } finally {
+                element.removeChild(header);
+            }
+        }
+
+        // Funciones de utilidad
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('es-ES', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function getPeriodsPerYear(frequency) {
+            switch (frequency) {
+                case 'monthly': return 12;
+                case 'quarterly': return 4;
+                case 'semiannual': return 2;
+                case 'annual': return 1;
+                default: return 12;
+            }
+        }
+    </script>
+</body>
+</html>
